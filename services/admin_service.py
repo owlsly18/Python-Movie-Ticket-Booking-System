@@ -3,13 +3,33 @@ from services.booking_service import add_showtime, list_all_bookings
 from utils.db import get_connection
 
 def seed_demo_data():
+    demo_movies = [
+        ("Inception", "Sci-Fi", "2h 28m"),
+        ("Interstellar", "Sci-Fi", "2h 49m"),
+        ("The Dark Knight", "Action", "2h 32m")
+    ]
+
     conn = get_connection()
     cursor = conn.cursor()
-    cursor.execute("INSERT INTO movies (title, genre, duration) VALUES ('Inception', 'Sci-Fi', '2h 28m')")
-    cursor.execute("INSERT INTO movies (title, genre, duration) VALUES ('Interstellar', 'Sci-Fi', '2h 49m')")
+
+    added = 0
+    for title, genre, duration in demo_movies:
+        cursor.execute("SELECT id FROM movies WHERE LOWER(title) = LOWER(?)", (title.lower(),))
+        if not cursor.fetchone():
+            cursor.execute(
+                "INSERT INTO movies (title, genre, duration) VALUES (?, ?, ?)",
+                (title, genre, duration)
+            )
+            added += 1
+
     conn.commit()
     conn.close()
-    print("🎉 Demo movies added.")
+
+    if added:
+        print(f"🎉 {added} demo movie(s) added.")
+    else:
+        print("✅ Demo movies already exist. No new movies added.")
+
 
 def admin_menu():
     password = input("Enter admin password: ")

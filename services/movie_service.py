@@ -19,16 +19,31 @@ def list_movies():
     return rows
 
 def add_movie():
-    title = input("Enter movie title: ")
-    genre = input("Enter genre: ")
-    duration = input("Enter duration (e.g. 2h 10m): ")
+    title = input("Enter movie title: ").strip()
+    genre = input("Enter genre: ").strip()
+    duration = input("Enter duration (e.g. 2h 30m): ").strip()
+
+    if not title or not genre or not duration:
+        print("❌ All fields are required.")
+        return
 
     conn = get_connection()
     cursor = conn.cursor()
-    cursor.execute("INSERT INTO movies (title, genre, duration) VALUES (?, ?, ?)", (title, genre, duration))
+
+    # Check if the movie already exists by title
+    cursor.execute("SELECT id FROM movies WHERE LOWER(title) = LOWER(?)", (title,))
+    if cursor.fetchone():
+        print("⚠️ Movie already exists.")
+        conn.close()
+        return
+
+    cursor.execute(
+        "INSERT INTO movies (title, genre, duration) VALUES (?, ?, ?)",
+        (title, genre, duration)
+    )
     conn.commit()
     conn.close()
-    print(f"✅ Movie '{title}' added successfully.")
+    print("✅ Movie added successfully.")
 
 def remove_movie():
     list_movies()
