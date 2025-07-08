@@ -1,9 +1,12 @@
 from utils.db import initialize_db
 from services.user_service import user_menu
 from services.admin_service import admin_menu
+from services.admin_service import seed_demo_data
+
 
 def main():
     initialize_db()
+    seed_demo_data()  # Comment out in production if needed
 
     while True:
         print("\n🎬 Movie Ticket Booking System")

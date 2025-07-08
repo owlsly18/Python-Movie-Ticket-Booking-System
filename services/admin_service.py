@@ -1,6 +1,8 @@
 from services.movie_service import add_movie, remove_movie, list_movies
 from services.booking_service import add_showtime, list_all_bookings
 from utils.db import get_connection
+from config import ADMIN_PASSWORD
+
 
 def seed_demo_data():
     demo_movies = [
@@ -33,7 +35,7 @@ def seed_demo_data():
 
 def admin_menu():
     password = input("Enter admin password: ")
-    if password != "admin123":
+    if password != ADMIN_PASSWORD:
         print("Access Denied.")
         return
 

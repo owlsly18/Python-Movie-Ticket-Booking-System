@@ -1,0 +1,42 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*/__pycache__/
+*.py[cod]
+*$py.class
+
+# SQLite database files
+*.db
+*.sqlite3
+
+# VSCode settings / IDE-specific
+.vscode/
+.idea/
+*.swp
+
+# Environment files
+.env
+.venv/
+venv/
+env/
+
+# Logs and dumps
+*.log
+
+# macOS & system files
+.DS_Store
+Thumbs.db
+
+# Backup files
+*.bak
+*.tmp
+
+# Python egg info
+*.egg-info/
+dist/
+build/
+
+# Unit test cache
+.pytest_cache/
+
+# Jupyter Notebook checkpoints (in case of future expansion)
+.ipynb_checkpoints/
