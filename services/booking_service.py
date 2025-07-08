@@ -12,12 +12,13 @@ def list_showtimes_for_movie(movie_id):
 
     if not rows:
         print("No showtimes available for this movie.")
-    else:
-        print("\n🕒 Showtimes:")
-        for row in rows:
-            show = Showtime(*row)
-            print(show)
+        return []
 
+    print("\n🕒 Showtimes:")
+    for row in rows:
+        show = Showtime(*row)
+        print(show)
+    return rows
 
 def show_available_seats(showtime_id):
     conn = get_connection()
@@ -138,7 +139,12 @@ def add_showtime():
     movie_id = input("Enter movie ID for the showtime: ")
     date = input("Enter date (YYYY-MM-DD): ")
     time = input("Enter time (HH:MM): ")
-    total_seats = int(input("Enter total seats: "))
+    # total_seats = int(input("Enter total seats: "))
+    try:
+        total_seats = int(input("Enter total seats: "))
+    except ValueError:
+        print("❌ Enter a valid number.")
+        return
 
     conn = get_connection()
     cursor = conn.cursor()
@@ -156,9 +162,11 @@ def list_all_bookings():
     conn = get_connection()
     cursor = conn.cursor()
     cursor.execute("""
-        SELECT b.id, b.user_name, s.movie_id, b.showtime_id, b.seat_number, b.status
+        SELECT b.id, b.user_name, m.title, s.date, s.time,
+               b.showtime_id, b.seat_number, b.status
         FROM bookings b
         JOIN showtimes s ON b.showtime_id = s.id
+        JOIN movies m ON s.movie_id = m.id
     """)
     results = cursor.fetchall()
     conn.close()
@@ -169,5 +177,14 @@ def list_all_bookings():
 
     print("\n📄 All Bookings:")
     for row in results:
-        booking = Booking(row[0], row[1], row[3], row[4], row[5])
-        print(booking)
+        booking_id = row[0]
+        user_name = row[1]
+        movie_title = row[2]
+        show_date = row[3]
+        show_time = row[4]
+        showtime_id = row[5]
+        seat_number = row[6]
+        status = row[7]
+
+        print(f"{booking_id}. User: {user_name} | Movie: {movie_title} | Time: {show_date} {show_time} | Showtime ID: {showtime_id} | Seat: {seat_number} | Status: {status}")
+

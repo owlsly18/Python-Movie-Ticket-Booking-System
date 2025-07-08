@@ -10,11 +10,13 @@ def list_movies():
 
     if not rows:
         print("No movies available.")
-    else:
-        print("\n🎥 Available Movies:")
-        for row in rows:
-            movie = Movie(*row)
-            print(movie)
+        return []
+
+    print("\n🎥 Available Movies:")
+    for row in rows:
+        movie = Movie(*row)
+        print(movie)
+    return rows
 
 def add_movie():
     title = input("Enter movie title: ")
