@@ -1,6 +1,7 @@
 from utils.db import get_connection
 from models.showtime import Showtime
 from models.booking import Booking
+from datetime import datetime
 
 
 def list_showtimes_for_movie(movie_id):
@@ -48,7 +49,12 @@ def show_available_seats(showtime_id):
 
 
 def book_seat(showtime_id, seat_number, user_name):
-    seat_number = int(seat_number)
+    # seat_number = int(seat_number)
+    try:
+        seat_number = int(seat_number)
+    except ValueError:
+        print("❌ Invalid seat number.")
+        return
     conn = get_connection()
     cursor = conn.cursor()
 
@@ -108,7 +114,11 @@ def cancel_booking():
     for b in bookings:
         print(b)
 
-    booking_id = input("Enter booking ID to cancel: ")
+    # booking_id = input("Enter booking ID to cancel: ")
+    booking_id = input("Enter booking ID to cancel: ").strip()
+    if not booking_id.isdigit():
+        print("❌ Invalid booking ID.")
+        return
 
     cursor.execute("""
         SELECT showtime_id, seat_number FROM bookings WHERE id = ? AND user_name = ?
@@ -139,6 +149,12 @@ def add_showtime():
     movie_id = input("Enter movie ID for the showtime: ")
     date = input("Enter date (YYYY-MM-DD): ")
     time = input("Enter time (HH:MM): ")
+    try:
+        datetime.strptime(date, "%Y-%m-%d")
+        datetime.strptime(time, "%H:%M")
+    except ValueError:
+        print("❌ Invalid date or time format.")
+        return
     # total_seats = int(input("Enter total seats: "))
     try:
         total_seats = int(input("Enter total seats: "))

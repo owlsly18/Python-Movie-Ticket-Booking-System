@@ -51,6 +51,11 @@ def remove_movie():
 
     conn = get_connection()
     cursor = conn.cursor()
+    cursor.execute("SELECT * FROM showtimes WHERE movie_id = ?", (movie_id,))
+    if cursor.fetchone():
+        print("❌ Cannot delete movie with existing showtimes. Delete them first.")
+        conn.close()
+        return
     cursor.execute("DELETE FROM movies WHERE id = ?", (movie_id,))
     conn.commit()
     conn.close()
